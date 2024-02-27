@@ -1,0 +1,48 @@
+---
+title: "Intro to Quarto"
+format: html
+bibliography: references.bib
+---
+
+# Headers 1
+
+## Header 2
+
+##### Header 5
+
+**this is bold**
+
+*this is italic*
+
+| Table Header | Second Header | third header |
+|--------------|---------------|--------------|
+| Table Cell   | Cell 2        | Cell3        |
+| Cell 3       | Cell 4        | cell 6       |
+
+-   item 1
+-   item 2
+-   item 3
+    -   subitem 1
+
+this is how you make a [hyperlink](https://www.worldtimebuddy.com/)
+
+this is a very important fact [@oke2020]
+
+| Col1 | Col2 | Col3 |
+|------|------|------|
+| x    | 12   | 2    |
+| y    | 14   | 4    |
+| z    | 10   | 8    |
+
+: table 1. contains data
+
+
+```{r}
+x <- 4*8 
+
+heights_ft <- c(5.2, 6.0, 5.7)
+
+heights_ft
+
+```
+
