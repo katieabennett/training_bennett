@@ -12,5 +12,5 @@ format: html
 
 ## Course Practice Session
 
-- Practice I: Cleaning and Wrnagling and Data Viz
+- Practice I: Cleaning and Wrangling and Data Viz
 - Practice II: Writing functions
