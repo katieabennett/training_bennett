@@ -7,7 +7,7 @@ format: html
 
 - [Introduction to Literate Analysis Using Quarto](intro-to-quarto.html)
 - [Cleaning and Wrangling data](cleaning-and-wrangling.html)
-- Data Visualization
+- [Data Visualization](intro-data-viz.html)
 - Functions and packages
 
 ## Course Practice Session
