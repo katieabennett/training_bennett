@@ -50,7 +50,7 @@ annual_esc <- escape %>% #put everything in new df
   group_by(species, sasap_region, year) %>% #create 3 groups
   summarize(escapement = sum(daily_count)) %>% #sum daily count to new variable
   filter(species %in% c("Chinook", "Sockeye", "Chum", "Coho", "Pink")) # %in% allows you to filter for multiple conditions; filter by multiple species
-  ungroup()
+  #ungroup()
 
 unique(annual_esc$species)
 
@@ -113,7 +113,7 @@ ggplot(annual_esc_2000,
     geom_point() +
     facet_wrap( ~ sasap_region,
                 scales = "free_y")+ 
-  labs(tital = "Annual Salmon Escapement by Region",
+  labs(title = "Annual Salmon Escapement by Region",
        y = "Escapement")+
   theme_bw()+
   theme(legend.position = "bottom",
