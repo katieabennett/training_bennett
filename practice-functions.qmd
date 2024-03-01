@@ -30,7 +30,114 @@ head(species, 3)
 load data from ADC
 ```{r}
 pred_surveys <- read_csv("https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3A9ffec04c-7e2d-41dd-9e88-b6c2e8c4375e")
+
 nest_data <- read_csv("https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3A982bd2fc-4edf-4da7-96ef-0d11b853102d")
+
 egg_data <- read_csv("https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3A4b219711-2282-420a-b1d6-1893fe4a74a6")
+```
+
+explore data
+```{r}
+glimpse(egg_data)
+unique(egg_data$species)
+
+unique(pred_surveys$species)
+
+unique(nest_data$species)
+```
+combine species name table w pred_surveys
+```{r}
+pred_comm_names <- left_join(pred_surveys,
+                             species,
+                             by = c("species" = "alpha_code"))
+head(pred_comm_names)
+
+```
+
+write a function to add common names to any df
+```{r}
+#' Assign species common names to species codes
+#'
+#' @param df 
+#' @param species 
+#'
+#' @return data frame with common names joined
+#' @export
+#'
+#' @examples
+#' egg_data_names <- assign_species_name(df = egg_data, species = species)
+#' 
+assign_species_name <- function(df, species){
+  return_df <- left_join(df, species, by = c("species" = "alpha_code"))
+  return(return_df)
+}
+
+```
+
+use the function on all 3 dfs
+```{r}
+egg_data_names <- assign_species_name(df = egg_data, species = species)
+head(egg_data_names)
+
+nest_data_names <- assign_species_name(df = nest_data, species = species)
+head(nest_data_names)
+
+```
+
+select only columns of interest and filter out NAs
+```{r}
+egg_data_names <- egg_data_names %>% 
+  select(c("year", "site", "nestID", "plot","egg_no", "length", "width", "common_name")) %>% 
+  filter(!is.na("common_name"))
+
+
+
+```
+
+put all the cleaning steps together
+```{r}
+## This is one solution. 
+predator_clean <- assign_species_name(pred_surveys, species) %>% 
+    select(year, site, date, common_name, count) %>% 
+    filter(!is.na(common_name))
+
+nest_location_clean <- assign_species_name(nest_data, species) %>% 
+    select(year, site, nestID, common_name, lat_corrected, long_corrected) %>% 
+    filter(!is.na(common_name))
+
+eggs_clean <- assign_species_name(egg_data, species) %>% 
+    select(year, site, nestID, common_name, length, width) %>% 
+    filter(!is.na(common_name))
+```
+
+additional info (optional challenge)
+```{r}
+#' Function to add common name to data.frame according to the BBL list of species codes
+
+#' @param df A data frame containing BBL species codes in column `species`
+#' @param species A data frame defining BBL species codes with columns `alpha_code` and `common_name`
+#' @return A data frame with original data df, plus the common name of species
+
+assign_species_name <- function(df, species){
+    if (!("alpha_code" %in% names(species)) |
+        !("species" %in% names(df)) |
+        !("common_name" %in% names(species))){
+      stop("Tables appear to be formatted incorrectly.")
+    }  
+  
+    return_df <- left_join(df, species, by = c("species" = "alpha_code"))
+    
+    if (nrow(return_df) > nrow(df)){
+      warning("Joined table has more rows than original table. Check species table for duplicated code values.")
+    }
+    
+    if (length(which(is.na(return_df$common_name))) > 0){
+      x <- length(which(is.na(return_df$common_name)))
+      warning(paste("Common name has", x, "rows containing NA"))
+    }
+    
+    return(return_df)
+        
+}
 ```
 
